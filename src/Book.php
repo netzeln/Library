@@ -64,13 +64,36 @@ class Book {
 
     function update($new_title)
     {
-        $GLOBALS['DB']->exec("UPDATE books SET title = '{$new_title}' WHERE id = {$this->getId()}; ");
+        $GLOBALS['DB']->exec("UPDATE books SET title = '{$new_title}' WHERE id = {$this->getId()};");
         $this->setTitle($new_title);
     }
 
     function delete()
     {
         $GLOBALS['DB']->exec("DELETE FROM books WHERE id = {$this->getId()};");
+    }
+
+    function add_author($new_author)
+    {
+        $GLOBALS['DB']->exec("INSERT INTO authorship (book_id, author_id) VALUES ({$this->getId()}, {$new_author->getID()});");
+    }
+
+    function authors()
+    {
+        $matching_authors = $GLOBALS['DB']->query("SELECT authors.* FROM books
+                            JOIN authorship ON (books.id = authorship.book_id)
+                            JOIN authors ON (authorship.author_id = authors.id)
+                            WHERE books.id = {$this->getId()};");
+        $authors = array();
+        foreach($matching_authors as $author)
+        {
+            $last_name = $author['last_name'];
+            $first_name = $author['first_name'];
+            $id = $author['id'];
+            $new_author = new Author($last_name, $first_name, $id);
+            array_push($authors, $new_author);
+        }
+        return $authors;
     }
 
 } ?>

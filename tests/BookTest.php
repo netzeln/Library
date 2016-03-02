@@ -6,6 +6,7 @@
 */
 
 require_once "src/Book.php";
+require_once "src/Author.php";
 
 //if using database
 $server = 'mysql:host=localhost;dbname=library_test';
@@ -20,6 +21,7 @@ class  BookTest  extends PHPUnit_Framework_TestCase{
   protected function teardown()
   {
       Book::deleteAll();
+      Author::deleteAll();
   }
 
   function testGetTitle()
@@ -180,6 +182,27 @@ class  BookTest  extends PHPUnit_Framework_TestCase{
       //assert
       $this->assertEquals([$new_book], $result);
 
+  }
+
+  function testAddAuthor()
+  {
+      //arrange
+      $title = "Spy";
+      $id = 0;
+      $new_book = new Book($title, $id);
+      $new_book->save();
+
+      $last_name = "Cooper";
+      $first_name = "James";
+      $id = 0;
+      $new_author = new Author($last_name, $first_name, $id);
+      $new_author->save();
+
+      //act
+      $new_book->add_author($new_author);
+
+      //assert
+      $this->assertEquals([$new_author], $new_book->authors());
   }
 }
 ?>

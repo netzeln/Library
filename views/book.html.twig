@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    {% include 'header.html' %}
+
+    <body>
+        <h1>{{book.getTitle}}</h1>
+            <h3>by</h3>
+            {% if book_authors is not empty%}
+                <p>
+                    {% for author in book_authors %}
+                    {{author.getFirstName}} {{author.getLastName}},
+                    {% endfor %}.
+                </p>
+            {% endif %}
+
+
+            <div class="container">
+                <form  action="/update_book/{{ book.getId }}" method="post">
+                <input name="_method" type="hidden" value="patch">
+                <label for="new_title">New Title</label>
+                <input name="new_title" type="text" value="{{ book.getTitle }}">
+                <button type="submit" class="btn btn-info">Confirm</button>
+
+                </form>
+            </div>
+
+        <h3>Back to <a href="/librarian">Librarian Portal </a></h3>
+
+    </body>
+</html>
