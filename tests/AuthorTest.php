@@ -148,5 +148,44 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $this->assertEquals($new_author, $result);
   }
 
+  function testUpdateMem()
+  {
+      //arrange
+      $last_name = "Cooper";
+      $first_name = "James";
+      $id = 0;
+      $new_author = new Author($last_name, $first_name, $id);
+      $new_author->save();
+
+      $new_first_name = "James Fenimore";
+      $new_last_name = "Coop-star";
+
+      //act
+      $new_author->update($new_last_name, $new_first_name);
+
+      //assert
+      $this->assertEquals($new_author->getFirstName(), $new_first_name);
+
+  }
+  function testUpdateDB()
+  {
+      //arrange
+      $last_name = "Cooper";
+      $first_name = "James";
+      $id = 0;
+      $new_author = new Author($last_name, $first_name, $id);
+      $new_author->save();
+
+      $new_first_name = "James Fenimore";
+      $new_last_name = "Coop-star";
+
+      //act
+      $new_author->update($new_last_name, $new_first_name);
+      $result = Author::find($new_author->getId());
+
+      //assert
+      $this->assertEquals($result->getFirstName(), $new_first_name);
+
+  }
 }
 ?>

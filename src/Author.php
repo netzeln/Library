@@ -75,5 +75,11 @@ class Author {
         return $found_author;
     }
 
+    function update($new_last_name, $new_first_name)
+    {
+        $GLOBALS['DB']->exec("UPDATE authors SET last_name = '{$new_last_name}', first_name ='{$new_first_name}' WHERE id = {$this->getId()}; ");
+        $this->setLastName($new_last_name);
+        $this->setFirstName($new_first_name);
+    }
 
 } ?>
