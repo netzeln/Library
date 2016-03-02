@@ -71,6 +71,7 @@ class Book {
     function delete()
     {
         $GLOBALS['DB']->exec("DELETE FROM books WHERE id = {$this->getId()};");
+        $GLOBALS['DB']->exec("DELETE FROM authorship WHERE book_id = {$this->getId()};");
     }
 
     function add_author($new_author)

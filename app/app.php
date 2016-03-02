@@ -32,7 +32,7 @@
         $new_book->save();
         //if author_exist is true
         var_dump($_POST['exist_author']);
-        if($_POST['exist_author'] != 'FALSE')
+        if($_POST['exist_author'] != 'FALSE' && ($new_book->getId() !=0))
         {
             $result = Author::find($_POST['exist_author']);
             $new_book->add_author($result);
@@ -42,14 +42,14 @@
 //get book edit page
     $app->get("/book/{id}", function($id) use ($app) {
         $book = Book::find($id);
-        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book));
+        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll()));
     });
 //edit title on book page
     $app->patch("/update_book/{id}", function($id) use ($app) {
         $new_title = $_POST['new_title'];
         $book = Book::find($id);
         $book->update($new_title);
-        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book));
+        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll()));
     });
 
     $app->post("/add_author", function() use ($app){
@@ -58,10 +58,39 @@
       return $app['twig']->render('librarian.html.twig', array('all_authors'=>Author::getAll(), 'all_books'=>Book::getAll()));
 
     });
+//add additional authorship
+    $app->post("/additional_author/{id}", function($id) use ($app){
+        $book = Book::find($id);
+        $all_authors = Author::getAll();
+        //if author_exist is true
+
+        if($_POST['exist_author'] != 'FALSE')
+        {
+            $result = Author::find($_POST['exist_author']);
+            $book->add_author($result);
+        } else
+        {
+            $new_author = new Author($_POST['author_last'], $_POST['author_first']);
+            $new_author->save();
+
+            $book->add_author($new_author);
+        }
 
 
+      return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, 'all_authors'=> $all_authors));
+    });
+
+//delete book
+
+    $app->delete("/delete/{id}", function($id) use ($app)
+    {
+        $banned_book = Book::find($id);
+        $banned_book->delete();
+      return $app['twig']->render('librarian.html.twig', array('all_authors'=>Author::getAll(), 'all_books'=>Book::getAll()));
+    });
 
 
+///PATRONS
     $app->get("/patron", function() use ($app){
         return $app['twig']->render('patron.html.twig');
     });

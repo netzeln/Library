@@ -14,15 +14,48 @@
             {% endif %}
 
 
-            <div class="container">
-                <form  action="/update_book/{{ book.getId }}" method="post">
-                <input name="_method" type="hidden" value="patch">
-                <label for="new_title">New Title</label>
-                <input name="new_title" type="text" value="{{ book.getTitle }}">
-                <button type="submit" class="btn btn-info">Confirm</button>
+        <div class="container">
+            <form  action="/update_book/{{ book.getId }}" method="post">
+            <input name="_method" type="hidden" value="patch">
+            <label for="new_title">New Title</label>
+            <input name="new_title" type="text" value="{{ book.getTitle }}">
+            <button type="submit" class="btn btn-info">Confirm</button>
 
-                </form>
-            </div>
+            </form>
+        </div>
+        <div class="container">
+            <form  action="/additional_author/{{book.getId}}" method="post">
+                <h3> Add New Author to This Book</h3>
+                <label for= "author_last"> Last Name:</label>
+                <input name="author_last" type="text">
+                <label for= "author_first">First Name:</label>
+                <input name="author_first" type="text">
+
+
+                <h3>OR Select an existing Author</h3>
+                <h4>Select an Author</h2>
+                    <select name="exist_author" class="form-control">
+                        <option value=FALSE selected>AUTHOR IS NOT LISTED</option>
+                        {% for authors in all_authors %}
+                            <option value='{{authors.getId}}'> {{authors.getLastName}}, {{authors.getFirstName}}</option>
+                        {% endfor %}
+                    </select>
+
+
+                <button type="submit" class="btn btn-info">Add Additional Author</button>
+
+            </form>
+
+        </div>
+
+        <div>
+            <h2> Warning: This Will Remove the Book from the Catalog</h2>
+            <form  action="/delete/{{book.getId}}" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit" class="btn btn-danger">DELETE BOOK</button>
+
+            </form>
+        </div>
 
         <h3>Back to <a href="/librarian">Librarian Portal </a></h3>
 
