@@ -5,7 +5,7 @@
 * @backupStaticAttributes disabled
 */
 
-require_once "src/Author.php";
+require_once "src/Patron.php";
 
 //if using database
 $server = 'mysql:host=localhost;dbname=library_test';
@@ -15,11 +15,11 @@ $DB = new PDO($server, $username, $password);
 
 
 
-class  AuthorTest  extends PHPUnit_Framework_TestCase{
+class  PatronTest  extends PHPUnit_Framework_TestCase{
 
   protected function teardown()
   {
-      Author::deleteAll();
+      Patron::deleteAll();
   }
 
   function testGetLastName()
@@ -28,10 +28,10 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $last_name = "Cooper";
       $first_name = "James";
       $id = 1;
-      $new_author = new Author($last_name, $first_name, $id);
+      $new_patron2 = new Patron($last_name, $first_name, $id);
 
       //act
-      $results = $new_author->getLastName();
+      $results = $new_patron2->getLastName();
 
       //assert
       $this->assertEquals("Cooper", $results);
@@ -42,10 +42,10 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $last_name = "Cooper";
       $first_name = "James";
       $id = 1;
-      $new_author = new Author($last_name, $first_name, $id);
+      $new_patron2 = new Patron($last_name, $first_name, $id);
 
       //act
-      $results = $new_author->getFirstName();
+      $results = $new_patron2->getFirstName();
 
       //assert
       $this->assertEquals("James", $results);
@@ -56,10 +56,10 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $last_name = "Cooper";
       $first_name = "James";
       $id = 1;
-      $new_author = new Author($last_name, $first_name, $id);
+      $new_patron2 = new Patron($last_name, $first_name, $id);
 
       //act
-      $results = $new_author->getId();
+      $results = $new_patron2->getId();
 
       //assert
       $this->assertEquals(1, $results);
@@ -71,14 +71,14 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $last_name = "Cooper";
       $first_name = "James";
       $id = 0;
-      $new_author = new Author($last_name, $first_name, $id);
+      $new_patron2 = new Patron($last_name, $first_name, $id);
 
       //act
-      $new_author->save();
-      $result = Author::getAll();
+      $new_patron2->save();
+      $result = Patron::getAll();
 
       //assert
-      $this->assertEquals([$new_author], $result);
+      $this->assertEquals([$new_patron2], $result);
   }
 
   function testGetAll()
@@ -87,20 +87,20 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $last_name = "Cooper";
       $first_name = "James";
       $id = 0;
-      $new_author = new Author($last_name, $first_name, $id);
-      $new_author->save();
+      $new_patron = new Patron($last_name, $first_name, $id);
+      $new_patron->save();
 
       $last_name2 = "Chernow";
       $first_name2 = "Ron";
-      $id = 1;
-      $new_author2 = new Author($last_name2, $first_name2, $id);
-      $new_author2->save();
+      $id2 = 1;
+      $new_patron2 = new Patron($last_name2, $first_name2, $id2);
+      $new_patron2->save();
 
       //act
-      $result = Author::getAll();
+      $result = Patron::getAll();
 
       //assert
-      $this->assertEquals([$new_author, $new_author2], $result);
+      $this->assertEquals([$new_patron, $new_patron2], $result);
   }
 
   function testDeleteAll()
@@ -109,18 +109,18 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $last_name = "Cooper";
       $first_name = "James";
       $id = 0;
-      $new_author = new Author($last_name, $first_name, $id);
-      $new_author->save();
+      $new_patron2 = new Patron($last_name, $first_name, $id);
+      $new_patron2->save();
 
       $last_name2 = "Chernow";
       $first_name2 = "Ron";
       $id = 1;
-      $new_author2 = new Author($last_name2, $first_name2, $id);
-      $new_author2->save();
+      $new_patron2 = new Patron($last_name2, $first_name2, $id);
+      $new_patron2->save();
 
       //act
-      Author::deleteAll();
-      $result = Author::getAll();
+      Patron::deleteAll();
+      $result = Patron::getAll();
 
       //assert
       $this->assertEquals([], $result);
@@ -132,20 +132,20 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $last_name = "Cooper";
       $first_name = "James";
       $id = 0;
-      $new_author = new Author($last_name, $first_name, $id);
-      $new_author->save();
+      $new_patron2 = new Patron($last_name, $first_name, $id);
+      $new_patron2->save();
 
       $last_name2 = "Chernow";
       $first_name2 = "Ron";
       $id2 = 1;
-      $new_author2 = new Author($last_name2, $first_name2, $id2);
-      $new_author2->save();
+      $new_patron2 = new Patron($last_name2, $first_name2, $id2);
+      $new_patron2->save();
 
       //act
-      $result = Author::find($new_author->getId());
+      $result = Patron::find($new_patron2->getId());
 
       //assert
-      $this->assertEquals($new_author, $result);
+      $this->assertEquals($new_patron2, $result);
   }
 
   function testUpdateMem()
@@ -154,17 +154,17 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $last_name = "Cooper";
       $first_name = "James";
       $id = 0;
-      $new_author = new Author($last_name, $first_name, $id);
-      $new_author->save();
+      $new_patron2 = new Patron($last_name, $first_name, $id);
+      $new_patron2->save();
 
       $new_first_name = "James Fenimore";
       $new_last_name = "Coop-star";
 
       //act
-      $new_author->update($new_last_name, $new_first_name);
+      $new_patron2->update($new_last_name, $new_first_name);
 
       //assert
-      $this->assertEquals($new_author->getFirstName(), $new_first_name);
+      $this->assertEquals($new_patron2->getFirstName(), $new_first_name);
 
   }
   function testUpdateDB()
@@ -173,15 +173,15 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $last_name = "Cooper";
       $first_name = "James";
       $id = 0;
-      $new_author = new Author($last_name, $first_name, $id);
-      $new_author->save();
+      $new_patron2 = new Patron($last_name, $first_name, $id);
+      $new_patron2->save();
 
       $new_first_name = "James Fenimore";
       $new_last_name = "Coop-star";
 
       //act
-      $new_author->update($new_last_name, $new_first_name);
-      $result = Author::find($new_author->getId());
+      $new_patron2->update($new_last_name, $new_first_name);
+      $result = Patron::find($new_patron2->getId());
 
       //assert
       $this->assertEquals($result->getFirstName(), $new_first_name);
@@ -193,21 +193,21 @@ class  AuthorTest  extends PHPUnit_Framework_TestCase{
       $last_name = "Cooper";
       $first_name = "James";
       $id = 0;
-      $new_author = new Author($last_name, $first_name, $id);
-      $new_author->save();
+      $new_patron = new Patron($last_name, $first_name, $id);
+      $new_patron->save();
 
       $last_name2 = "Chernow";
       $first_name2 = "Ron";
-      $id = 1;
-      $new_author2 = new Author($last_name2, $first_name2, $id);
-      $new_author2->save();
+      $id2 = 1;
+      $new_patron2 = new Patron($last_name2, $first_name2, $id2);
+      $new_patron2->save();
 
       //act
-      $new_author2->delete();
-      $result = Author::getAll();
+      $new_patron->delete();
+      $result = Patron::getAll();
 
       //assert
-      $this->assertEquals([$new_author], $result);
+      $this->assertEquals([$new_patron2], $result);
 
   }
 }

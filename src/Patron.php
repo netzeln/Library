@@ -1,5 +1,5 @@
 <?php
-class Author {
+class Patron {
 
       private $last_name;
       private $first_name;
@@ -37,54 +37,54 @@ class Author {
 
       function save ()
       {
-          $GLOBALS['DB']->exec("INSERT INTO authors (last_name, first_name) VALUES ('{$this->getLastName()}', '{$this->getFirstName()}');");
+          $GLOBALS['DB']->exec("INSERT INTO patrons (last_name, first_name) VALUES ('{$this->getLastName()}', '{$this->getFirstName()}');");
           $this->id = $GLOBALS['DB']->lastInsertId();
       }
 
       static function getAll()
       {
-          $found_authors = $GLOBALS['DB']->query("SELECT * FROM authors;");
-          $authors = array();
-          foreach($found_authors as $author)
+          $found_patrons = $GLOBALS['DB']->query("SELECT * FROM patrons;");
+          $patrons = array();
+          foreach($found_patrons as $patron)
           {
-              $last_name = $author['last_name'];
-              $first_name = $author['first_name'];
-              $id = $author['id'];
-              $new_author = new Author($last_name, $first_name, $id);
-              array_push($authors, $new_author);
+              $last_name = $patron['last_name'];
+              $first_name = $patron['first_name'];
+              $id = $patron['id'];
+              $new_patron = new Patron($last_name, $first_name, $id);
+              array_push($patrons, $new_patron);
           }
-          return $authors;
+          return $patrons;
       }
 
       static function deleteAll()
       {
-          $GLOBALS['DB']->exec("DELETE FROM authors;");
+          $GLOBALS['DB']->exec("DELETE FROM patrons;");
       }
 
     static function find($search_id)
     {
-        $authors = Author::getAll();
-        $found_author = null;
-        foreach($authors as $author)
+        $patrons = Patron::getAll();
+        $found_patron = null;
+        foreach($patrons as $patron)
         {
-            if($search_id == $author->getId())
+            if($search_id == $patron->getId())
             {
-                $found_author = $author;
+                $found_patron = $patron;
             }
         }
-        return $found_author;
+        return $found_patron;
     }
 
     function update($new_last_name, $new_first_name)
     {
-        $GLOBALS['DB']->exec("UPDATE authors SET last_name = '{$new_last_name}', first_name ='{$new_first_name}' WHERE id = {$this->getId()}; ");
+        $GLOBALS['DB']->exec("UPDATE patrons SET last_name = '{$new_last_name}', first_name ='{$new_first_name}' WHERE id = {$this->getId()}; ");
         $this->setLastName($new_last_name);
         $this->setFirstName($new_first_name);
     }
 
     function delete()
     {
-        $GLOBALS['DB']->exec("DELETE FROM authors WHERE id = {$this->getId()};");
+        $GLOBALS['DB']->exec("DELETE FROM patrons WHERE id = {$this->getId()};");
     }
 
 } ?>
