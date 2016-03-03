@@ -7,6 +7,7 @@
 
 require_once "src/Book.php";
 require_once "src/Author.php";
+require_once "src/Copy.php";
 
 //if using database
 $server = 'mysql:host=localhost;dbname=library_test';
@@ -22,6 +23,7 @@ class  BookTest  extends PHPUnit_Framework_TestCase{
   {
       Book::deleteAll();
       Author::deleteAll();
+      Copy::deleteAll();
   }
 
   function testGetTitle()
@@ -205,7 +207,7 @@ class  BookTest  extends PHPUnit_Framework_TestCase{
       $this->assertEquals([$new_author], $new_book->authors());
   }
 
-  function testAddCopy()
+  function testCount()
   {
       //arrange
       $title = "Spy";
@@ -213,18 +215,18 @@ class  BookTest  extends PHPUnit_Framework_TestCase{
       $new_book = new Book($title, $id);
       $new_book->save();
 
-      $book_id = 1;
-      $available = 1;
-      $due_date = "3000-04-03";
-      $id = 0;
-      $new_copy = new Copy($book_id, $available, $due_date, $id);
+      $book_id = $new_book->getId();
+      $new_copy = new Copy($book_id);
       $new_copy->save();
+      $book_id2 = $new_book->getId();
+      $new_copy2 = new Copy($book_id2);
+      $new_copy2->save();
 
       //act
-      $new_book->addCopy($new_copy);
+      $new_book->copies();
 
       //assert
-      $this->assertEquals([$new_copy], $new_book->copies());
+      $this->assertEquals(2, $new_book->copies());
   }
 }
 ?>

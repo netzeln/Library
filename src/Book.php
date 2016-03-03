@@ -97,11 +97,6 @@ class Book {
         return $authors;
     }
 
-    function add_copy($new_copy)
-    {
-        $GLOBALS['DB']->exec("INSERT INTO copies (book_id, available, due_date) VALUES ({$this->getId()}, {$new_copy->getAvailable()}, {$new_copy->getDueDate});");
-    }
-
     function copies()
     {
         $matching_copies = $GLOBALS['DB']->query("SELECT * FROM copies WHERE book_id = {$this->getId()};");

@@ -19,6 +19,7 @@
                         {% endfor %}.
                     </p>
                 {% endif %}
+                <p># of copies in catalog: {{ book.copies }}</p>
             <hr>
         </div>
         <div class="container">
@@ -69,8 +70,7 @@
         <div class="container">
             <form action="/add_copies/{{book.getId}}" method="post">
                 <h3>Enter additional copies of this book into the catalog database.</h3>
-                <label for="add_copy">Copies:</label>
-                <input name="add_copy" type="number" min="0">
+                <input name="add_book" type="number" min="0">
                 <button type="submit" class="btn btn-info">Add</button>
             </form>
         </div>

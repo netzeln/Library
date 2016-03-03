@@ -3,6 +3,7 @@
     require_once __DIR__."/../src/Book.php";
     require_once __DIR__."/../src/Author.php";
     require_once __DIR__."/../src/Patron.php";
+    require_once __DIR__."/../src/Copy.php";
 
 
 
@@ -75,7 +76,6 @@
             $book->add_author($new_author);
         }
 
-
       return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, 'all_authors'=> $all_authors));
     });
 
@@ -92,22 +92,22 @@
     $app->post("/add_copies/{id}", function($id) use ($app)
     {
         $book = Book::find($id);
-        $copies = $_POST['add_copy'];
+        $book_id = $book->getId();
+        $new_copy = new Copy($book_id);
+        $amount = $_POST['add_book'];
         $counter = 0;
-        while($counter < $copies)
+        while($counter <= $amount)
         {
-            $book->save();
+            $new_copy->save();
             $counter++;
         }
-        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, 'all_authors'=> $all_authors));
+        $copy = $book->copies();
+        return $app['twig']->render('book.html.twig', array('copies' => $copy, 'book_authors' => $book->authors(), 'book' => $book, 'all_authors'=> Author::getAll()));
     });
 
 //book checkout
     $app->patch("/book_checkout/{id}", function($id) use ($app) {
-        $new_title = $_POST['new_title'];
-        $book = Book::find($id);
-        $new_copy = Copy::find($id);
-        $new_copy->checkout();
+
         return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll()));
     });
 
