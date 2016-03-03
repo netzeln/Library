@@ -89,6 +89,18 @@
       return $app['twig']->render('librarian.html.twig', array('all_authors'=>Author::getAll(), 'all_books'=>Book::getAll()));
     });
 
+//book multiple copies
+    $app->post("/add_copies/{id}", function($id) use ($app)
+    {
+        $book = Book::find($id);
+        $copies = $_POST['add_copy'];
+        $counter = 0;
+        foreach($counter; $counter >= $copies; $counter++)
+        {
+            $book->save();
+        }
+    });
+
 
 ///PATRONS
     $app->get("/patron", function() use ($app){

@@ -1,0 +1,18 @@
+.page_header {
+    padding-left: 60px;
+    background-color: #ffbb99;
+    height: 150px;
+    padding-top: 5px;
+}
+
+body {
+    background-color: #ffebcc;
+}
+
+.red_text {
+    color: red;
+}
+
+hr{
+   border: 1px solid grey;
+}

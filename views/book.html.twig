@@ -3,18 +3,27 @@
     {% include 'header.html' %}
 
     <body>
-        <h1>{{book.getTitle}}</h1>
-            <h3>by</h3>
-            {% if book_authors is not empty%}
-                <p>
-                    {% for author in book_authors %}
-                    {{author.getFirstName}} {{author.getLastName}},
-                    {% endfor %}.
-                </p>
-            {% endif %}
-
+        <div class="page_header">
+            <h1>The Library</h1>
+            <p><a class="btn btn-primary btn-lg" href="/" role="button">Home</a>
+             <a class="btn btn-primary btn-lg" href="/librarian" role="button">Librarian Portal</a>
+            </p>
+        </div>
+        <div class="container">
+            <h1>{{book.getTitle}}</h1>
+                <h3>by</h3>
+                {% if book_authors is not empty%}
+                    <p>
+                        {% for author in book_authors %}
+                        {{author.getFirstName}} {{author.getLastName}},
+                        {% endfor %}.
+                    </p>
+                {% endif %}
+            <hr>
+        </div>
 
         <div class="container">
+            <h3>Edit Title</h3>
             <form  action="/update_book/{{ book.getId }}" method="post">
             <input name="_method" type="hidden" value="patch">
             <label for="new_title">New Title</label>
@@ -25,12 +34,11 @@
         </div>
         <div class="container">
             <form  action="/additional_author/{{book.getId}}" method="post">
-                <h3> Add New Author to This Book</h3>
+                <h3>Add New Author to This Book</h3>
                 <label for= "author_last"> Last Name:</label>
                 <input name="author_last" type="text">
                 <label for= "author_first">First Name:</label>
                 <input name="author_first" type="text">
-
 
                 <h3>OR Select an existing Author</h3>
                 <h4>Select an Author</h2>
@@ -41,23 +49,27 @@
                         {% endfor %}
                     </select>
 
-
                 <button type="submit" class="btn btn-info">Add Additional Author</button>
-
             </form>
-
         </div>
 
-        <div>
-            <h2> Warning: This Will Remove the Book from the Catalog</h2>
+        <div class="container">
+            <form action="/add_copies/{{book.getId}}" method="post">
+                <h3>Enter additional copies of this book into the catalog database.</h3>
+                <label for="add_copy">Copies:</label>
+                <input name="add_copy" type="number" min="0">
+                <button type="submit" class="btn btn-info">Add</button>
+            </form>
+        </div>
+
+        <div class="container">
+            <h3><span class="red_text">Warning</span>: This will permanently remove <em>{{ book.getTitle }}</em> from the catalog database</h2>
             <form  action="/delete/{{book.getId}}" method="post">
             <input type="hidden" name="_method" value="delete">
             <button type="submit" class="btn btn-danger">DELETE BOOK</button>
 
             </form>
         </div>
-
-        <h3>Back to <a href="/librarian">Librarian Portal </a></h3>
 
     </body>
 </html>
