@@ -6,7 +6,7 @@ class Copy {
       private $due_date;
       private $id;
 
-      function __construct($book_id, $available = 1, $due_date, $id = null)
+      function __construct($book_id, $available = 1, $due_date = '3000-04-30', $id = null)
       {
         $this->book_id = $book_id;
         $this->available = $available;
@@ -95,9 +95,9 @@ class Copy {
 
     function checkin()
     {
-        $GLOBALS['DB']->exec("UPDATE copies SET available = 1, due_date ='' WHERE id = {$this->getId()};");
+        $GLOBALS['DB']->exec("UPDATE copies SET available = 1, due_date ='3000-04-30' WHERE id = {$this->getId()};");
         $this->setAvailable(1);
-        $this->setDueDate('');
+        $this->setDueDate('3000-04-30');
     }
 
     function delete()
