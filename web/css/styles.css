@@ -16,3 +16,7 @@ body {
 hr{
    border: 1px solid grey;
 }
+
+.author {
+    width: 400px;
+}

@@ -23,58 +23,77 @@
             <hr>
         </div>
         <div class="container">
-            <h3>Checkout Status:</h3>
-            <form action="/book_checkout/{{ book.getId }}" method="post">
-            <input name="_method" type="hidden" value="patch">
-            <label for="due_date">Due Date</label>
-            <input name="due_date" type="date">
-            <button type="submit" class="btn btn-info">Check Out</button>
-            </form>
-            <form action="/book_checkin/{{ book.getId }}" method="post">
-            <input name="_method" type="hidden" value="patch">
-            <button type="submit" class="btn btn-info">Check In</button>
-            </form>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="container">
+                        <h3>Edit Title</h3>
+                        <form  action="/update_book/{{ book.getId }}" method="post">
+                        <input name="_method" type="hidden" value="patch">
+                        <label for="new_title">New Title</label>
+                        <input name="new_title" type="text" value="{{ book.getTitle }}">
+                        <button type="submit" class="btn btn-info">Confirm</button>
+                        </form>
+                    </div>
+                    <div class="container">
+                        <form  action="/additional_author/{{book.getId}}" method="post">
+                            <h3>Add New Author to This Book</h3>
+                            <label for= "author_last"> Last Name:</label>
+                            <input name="author_last" type="text">
+                            <label for= "author_first">First Name:</label>
+                            <input name="author_first" type="text">
+
+                            <h3>OR Select an existing Author</h3>
+                            <h4>Select an Author</h2>
+                                <select name="exist_author" class="form-control author">
+                                    <option value=FALSE selected>AUTHOR IS NOT LISTED</option>
+                                    {% for authors in all_authors %}
+                                        <option value='{{authors.getId}}'> {{authors.getLastName}}, {{authors.getFirstName}}</option>
+                                    {% endfor %}
+                                </select>
+
+                            <button type="submit" class="btn btn-info">Add Additional Author</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="container">
+                        {% if copies is not empty %}
+                            <ol>
+                            {% for copy in copies %}
+                                <li> <a href="/book/{{book.getId}}/{{copy.getId}}"> {{book.getTitle}}, barcode #: {{copy.getId}}</a>
+                                {% if copy.getAvailable == 1%}
+                                        <em> On Shelf</em>
+                                {% else %}
+                                        <em> Due: {{copy.getDueDate}}</em>
+                                {% endif %}
+                                </li>
+                            {% endfor %}
+                            </ol>
+                        {% endif %}
+                    </div>
+                    <div class="container">
+                        <h3>Checkout Status:</h3>
+                        <form action="/book_checkout/{{ book.getId }}" method="post">
+                        <input name="_method" type="hidden" value="patch">
+                        <label for="due_date">Due Date</label>
+                        <input name="due_date" type="date">
+                        <button type="submit" class="btn btn-info">Check Out</button>
+                        </form>
+                        <form action="/book_checkin/{{ book.getId }}" method="post">
+                        <input name="_method" type="hidden" value="patch">
+                        <button type="submit" class="btn btn-info">Check In</button>
+                        </form>
+                    </div>
+                    <div class="container">
+                        <form action="/add_copies/{{book.getId}}" method="post">
+                            <h3>Enter additional copies of this book into the catalog database.</h3>
+                            <input name="add_book" type="number" min="0">
+                            <button type="submit" class="btn btn-info">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="container">
-            <h3>Edit Title</h3>
-            <form  action="/update_book/{{ book.getId }}" method="post">
-            <input name="_method" type="hidden" value="patch">
-            <label for="new_title">New Title</label>
-            <input name="new_title" type="text" value="{{ book.getTitle }}">
-            <button type="submit" class="btn btn-info">Confirm</button>
-
-            </form>
-        </div>
-        <div class="container">
-            <form  action="/additional_author/{{book.getId}}" method="post">
-                <h3>Add New Author to This Book</h3>
-                <label for= "author_last"> Last Name:</label>
-                <input name="author_last" type="text">
-                <label for= "author_first">First Name:</label>
-                <input name="author_first" type="text">
-
-                <h3>OR Select an existing Author</h3>
-                <h4>Select an Author</h2>
-                    <select name="exist_author" class="form-control">
-                        <option value=FALSE selected>AUTHOR IS NOT LISTED</option>
-                        {% for authors in all_authors %}
-                            <option value='{{authors.getId}}'> {{authors.getLastName}}, {{authors.getFirstName}}</option>
-                        {% endfor %}
-                    </select>
-
-                <button type="submit" class="btn btn-info">Add Additional Author</button>
-            </form>
-        </div>
-
-        <div class="container">
-            <form action="/add_copies/{{book.getId}}" method="post">
-                <h3>Enter additional copies of this book into the catalog database.</h3>
-                <input name="add_book" type="number" min="0">
-                <button type="submit" class="btn btn-info">Add</button>
-            </form>
-        </div>
-
         <div class="container">
             <h3><span class="red_text">Warning</span>: This will permanently remove <em>{{ book.getTitle }}</em> from the catalog database</h2>
             <form  action="/delete/{{book.getId}}" method="post">

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    {% include 'header.html' %}
+
+    <body>
+        <div class="page_header">
+            <h1>The Library</h1>
+            <p><a class="btn btn-primary btn-lg" href="/" role="button">Home</a>
+             <a class="btn btn-primary btn-lg" href="/librarian" role="button">Librarian Portal</a>
+            </p>
+        </div>
+        <div class="container">
+            <h1>{{book.getTitle}}</h1>
+                <h3>by</h3>
+                {% if book_authors is not empty%}
+                    <p>
+                        {% for author in book_authors %}
+                        {{author.getFirstName}} {{author.getLastName}},
+                        {% endfor %}.
+                    </p>
+                {% endif %}
+                <p>Copy Barcode #  {{ copy.getId }}</p>
+            <hr>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="container">
+                        <h3>Checkout Status:</h3><h4>{% if copy.getAvailable == 1 %}
+                                <em> On Shelf</em>
+                        {% else %}
+                                <em> Due: {{copy.getDueDate}}</em>
+                        {% endif %}
+                    </h4>
+
+
+                        <form action="/copy_checkout/{{ book.getId }}/{{copy.getId}}" method="post">
+                        <input name="_method" type="hidden" value="patch">
+                        <label for="due_date">Set Due Date</label>
+                        <input name="due_date" type="date">
+                        <button type="submit" class="btn btn-info">Check Out</button>
+                        </form>
+                        <form action="/book_checkin/{{ book.getId }}" method="post">
+                        <input name="_method" type="hidden" value="patch">
+                        <button type="submit" class="btn btn-info">Check In</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="container">
+
+        </form>
+        </div>
+
+    </body>
+</html>

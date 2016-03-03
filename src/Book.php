@@ -112,5 +112,20 @@ class Book {
         }
         return count($copies);
     }
+    function copies_list()
+    {
+        $matching_copies = $GLOBALS['DB']->query("SELECT * FROM copies WHERE book_id = {$this->getId()};");
+        $copies = array();
+        foreach($matching_copies as $copy)
+        {
+            $book_id = $copy['book_id'];
+            $available = $copy['available'];
+            $due_date = $copy['due_date'];
+            $id = $copy['id'];
+            $new_copy = new Copy($book_id, $available, $due_date, $id);
+            array_push($copies, $new_copy);
+        }
+        return $copies;
+    }
 
 } ?>

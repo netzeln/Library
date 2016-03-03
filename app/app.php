@@ -42,14 +42,14 @@
 //get book edit page
     $app->get("/book/{id}", function($id) use ($app) {
         $book = Book::find($id);
-        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll()));
+        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll(), 'copies'=>$book->copies_list()));
     });
 //edit title on book page
     $app->patch("/update_book/{id}", function($id) use ($app) {
         $new_title = $_POST['new_title'];
         $book = Book::find($id);
         $book->update($new_title);
-        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll()));
+        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll(), 'copies'=>$book->copies_list()));
     });
 
     $app->post("/add_author", function() use ($app){
@@ -76,7 +76,7 @@
             $book->add_author($new_author);
         }
 
-      return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, 'all_authors'=> $all_authors));
+      return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, 'all_authors'=> $all_authors, 'copies'=>$book->copies_list()));
     });
 
 //delete book
@@ -95,20 +95,28 @@
         $book_id = $book->getId();
         $new_copy = new Copy($book_id);
         $amount = $_POST['add_book'];
-        $counter = 0;
+        $counter = 1;
         while($counter <= $amount)
         {
             $new_copy->save();
             $counter++;
         }
         $copy = $book->copies();
-        return $app['twig']->render('book.html.twig', array('copies' => $copy, 'book_authors' => $book->authors(), 'book' => $book, 'all_authors'=> Author::getAll()));
+        return $app['twig']->render('book.html.twig', array('copy_number' => $copy, 'book_authors' => $book->authors(), 'book' => $book, 'all_authors'=> Author::getAll(), 'copies'=>$book->copies_list()));
     });
-
+//go to copy page
+$app->get("/book/{id}/{copy_id}", function($id, $copy_id) use ($app) {
+    $book = Book::find($id);
+    $copy = Copy::find($copy_id);
+    return $app['twig']->render('copy.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll(), 'copy'=>$copy, 'copies'=>$book->copies_list()));
+});
 //book checkout
-    $app->patch("/book_checkout/{id}", function($id) use ($app) {
-
-        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll()));
+    $app->patch("/copy_checkout/{id}/{copy_id}", function($id, $copy_id) use ($app) {
+        $book = Book::find($id);
+        $due_date = $_POST['due_date'];
+        $copy = Copy::find($copy_id);
+        $copy->checkout($due_date);
+        return $app['twig']->render('copy.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll(), 'copy'=>$copy, 'copies'=>$book->copies_list()));
     });
 
 
