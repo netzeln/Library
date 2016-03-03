@@ -204,5 +204,27 @@ class  BookTest  extends PHPUnit_Framework_TestCase{
       //assert
       $this->assertEquals([$new_author], $new_book->authors());
   }
+
+  function testAddCopy()
+  {
+      //arrange
+      $title = "Spy";
+      $id = 1;
+      $new_book = new Book($title, $id);
+      $new_book->save();
+
+      $book_id = 1;
+      $available = 1;
+      $due_date = "3000-04-03";
+      $id = 0;
+      $new_copy = new Copy($book_id, $available, $due_date, $id);
+      $new_copy->save();
+
+      //act
+      $new_book->addCopy($new_copy);
+
+      //assert
+      $this->assertEquals([$new_copy], $new_book->copies());
+  }
 }
 ?>

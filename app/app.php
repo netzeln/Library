@@ -28,10 +28,9 @@
     });
 //cataloging
     $app->post("/add_book", function() use ($app){
-        $new_book = new Book ($_POST['title']);
+        $new_book = new Book($_POST['title']);
         $new_book->save();
         //if author_exist is true
-        var_dump($_POST['exist_author']);
         if($_POST['exist_author'] != 'FALSE' && ($new_book->getId() !=0))
         {
             $result = Author::find($_POST['exist_author']);
@@ -95,10 +94,21 @@
         $book = Book::find($id);
         $copies = $_POST['add_copy'];
         $counter = 0;
-        foreach($counter; $counter >= $copies; $counter++)
+        while($counter < $copies)
         {
             $book->save();
+            $counter++;
         }
+        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, 'all_authors'=> $all_authors));
+    });
+
+//book checkout
+    $app->patch("/book_checkout/{id}", function($id) use ($app) {
+        $new_title = $_POST['new_title'];
+        $book = Book::find($id);
+        $new_copy = Copy::find($id);
+        $new_copy->checkout();
+        return $app['twig']->render('book.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll()));
     });
 
 

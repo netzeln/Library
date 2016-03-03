@@ -21,6 +21,19 @@
                 {% endif %}
             <hr>
         </div>
+        <div class="container">
+            <h3>Checkout Status:</h3>
+            <form action="/book_checkout/{{ book.getId }}" method="post">
+            <input name="_method" type="hidden" value="patch">
+            <label for="due_date">Due Date</label>
+            <input name="due_date" type="date">
+            <button type="submit" class="btn btn-info">Check Out</button>
+            </form>
+            <form action="/book_checkin/{{ book.getId }}" method="post">
+            <input name="_method" type="hidden" value="patch">
+            <button type="submit" class="btn btn-info">Check In</button>
+            </form>
+        </div>
 
         <div class="container">
             <h3>Edit Title</h3>

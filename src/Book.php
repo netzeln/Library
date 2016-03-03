@@ -97,4 +97,25 @@ class Book {
         return $authors;
     }
 
+    function add_copy($new_copy)
+    {
+        $GLOBALS['DB']->exec("INSERT INTO copies (book_id, available, due_date) VALUES ({$this->getId()}, {$new_copy->getAvailable()}, {$new_copy->getDueDate});");
+    }
+
+    function copies()
+    {
+        $matching_copies = $GLOBALS['DB']->query("SELECT * FROM copies WHERE book_id = {$this->getId()};");
+        $copies = array();
+        foreach($matching_copies as $copy)
+        {
+            $book_id = $copy['book_id'];
+            $available = $copy['available'];
+            $due_date = $copy['due_date'];
+            $id = $copy['id'];
+            $new_copy = new Copy($book_id, $available, $due_date, $id);
+            array_push($copies, $new_copy);
+        }
+        return count($copies);
+    }
+
 } ?>
