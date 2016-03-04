@@ -41,6 +41,25 @@ class Patron {
           $this->id = $GLOBALS['DB']->lastInsertId();
       }
 
+      function getCheckouts()
+      {
+            $matching_copies = $GLOBALS['DB']->query("SELECT copies.* FROM patrons
+                                JOIN circulation ON (patrons.id = circulation.patron_id)
+                                JOIN copies ON (circulation.copy_id = copies.id)
+                                WHERE patrons.id = {$this->getId()};");
+            $copies = array();
+            foreach($matching_copies as $copy)
+            {
+                $book_id = $copy['book_id'];
+                $available = $copy['available'];
+                $due_date = $copy['due_date'];
+                $id = $copy['id'];
+                $new_copy = new Copy($book_id, $available, $due_date, $id);
+                array_push($copies, $new_copy);
+            }
+            return $copies;
+        }
+
       static function getAll()
       {
           $found_patrons = $GLOBALS['DB']->query("SELECT * FROM patrons;");

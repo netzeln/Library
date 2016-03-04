@@ -86,9 +86,20 @@ class Copy {
         return $found_copy;
     }
 
-    function checkout($new_due_date)
+    function getTitle(){
+
+        $query = $GLOBALS['DB']->query("SELECT * FROM books
+                            JOIN copies ON (books.id = {$this->getBookId()});");
+        $book = $query->fetchAll(PDO::FETCH_ASSOC);
+        // var_dump($book);
+        $title = $book[0]['title'];
+        return $title;
+
+     }
+    function checkout($new_due_date, $patron)
     {
         $GLOBALS['DB']->exec("UPDATE copies SET available = 0, due_date ='{$new_due_date}' WHERE id = {$this->getId()};");
+        $GLOBALS['DB']->exec("INSERT INTO circulation (copy_id, patron_id) VALUES ({$this->getId()}, {$patron->getId()});");
         $this->setAvailable(0);
         $this->setDueDate($new_due_date);
     }

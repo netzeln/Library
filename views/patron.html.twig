@@ -7,5 +7,34 @@
         <div class="container">
             <h1>Welcome, Patron</h1>
         </div>
+
+        <div class="container new_patron">
+            <h3>New Patron</h3>
+            <form  action="/add_patron" method="post">
+                <label for= "patron_last"> Last Name:</label>
+                <input name="patron_last" type="text">
+                <label for= "patron_first">First Name:</label>
+                <input name="patron_first" type="text">
+
+                <button type="submit" class="btn btn-info">Add New Patron</button>
+
+            </form>
+        </div>
+        <div class="select_patron">
+            {% if all_patrons is not empty %}
+            <h4>Select Your Account (be honest)</h2>
+                <form  action="/patron_id/login" method="get">
+                    <select name="get_patron" class="form-control patron">
+                        {% for patron in all_patrons %}
+                            <option value='{{ patron.getId }}'> {{patron.getLastName}}, {{patron.getFirstName}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="btn btn-info">Log In</button>
+                </form>
+            {% endif %}
+        </div>
+
+        </div>
     </body>
 </html>

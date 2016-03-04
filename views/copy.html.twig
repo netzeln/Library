@@ -7,6 +7,7 @@
             <h1>The Library</h1>
             <p><a class="btn btn-primary btn-lg" href="/" role="button">Home</a>
              <a class="btn btn-primary btn-lg" href="/librarian" role="button">Librarian Portal</a>
+             <a class="btn btn-info btn-lg" href="/book/{{book.getId}}" role="button">Back to Book</a>
             </p>
         </div>
         <div class="container">
@@ -43,14 +44,32 @@
                         <input name="_method" type="hidden" value="patch">
                         <label for="due_date">Set Due Date</label>
                         <input name="due_date" type="date">
+                        
+                        <select name="get_patron" class="form-control patron">
+                            {% for patron in all_patrons %}
+                                <option value='{{ patron.getId }}'> {{patron.getLastName}}, {{patron.getFirstName}}</option>
+                            {% endfor %}
+                        </select>
+
                         <button type="submit" class="btn btn-info">Check Out</button>
                         </form>
+
+
                         <form action="/book_checkin/{{ book.getId }}" method="post">
                         <input name="_method" type="hidden" value="patch">
                         <button type="submit" class="btn btn-info">Check In</button>
                         </form>
-                    </div>
 
+
+                    </div>
+                    <div class="container">
+                        <h3><span class="red_text">Warning</span>: This will permanently remove Copy # {{copy.getId}} of <em>{{ book.getTitle }}</em> from the catalog database</h2>
+                        <form  action="/delete/{{book.getId}}/{{copy.getId}}" method="post">
+                        <input type="hidden" name="_method" value="delete">
+                        <button type="submit" class="btn btn-danger">DELETE COPY</button>
+
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    {% include 'header.html' %}
+
+    <body>
+        {% include 'nav_bar.html' %}
+        <div class="container">
+            <h1>Welcome, {{ patron.getFirstName }}</h1>
+        </div>
+
+        <div class="select_patron">
+            <h3>List of books you have checked out</h3>
+            {% for copy in copies %}
+            <ul>
+                <li><em>{{copy.getTitle}}</em>, barcode#: {{copy.getId}}, due {{copy.getDueDate}}</li>
+            </ul>
+            {% endfor %}
+        </div>
+
+        </div>
+    </body>
+</html>

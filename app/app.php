@@ -16,7 +16,7 @@
 
     $app->register(new Silex\Provider\TwigServiceProvider(), array('twig.path'=>__DIR__."/../views"
     ));
-
+$app['debug'] = true;
     use Symfony\Component\HttpFoundation\Request;
     Request::enableHttpMethodParameterOverride();
 
@@ -108,23 +108,43 @@
 $app->get("/book/{id}/{copy_id}", function($id, $copy_id) use ($app) {
     $book = Book::find($id);
     $copy = Copy::find($copy_id);
-    return $app['twig']->render('copy.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll(), 'copy'=>$copy, 'copies'=>$book->copies_list()));
+    return $app['twig']->render('copy.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll(), 'copy'=>$copy, 'all_patrons'=> Patron::getAll(), 'copies'=>$book->copies_list()));
 });
 //book checkout
     $app->patch("/copy_checkout/{id}/{copy_id}", function($id, $copy_id) use ($app) {
         $book = Book::find($id);
         $due_date = $_POST['due_date'];
         $copy = Copy::find($copy_id);
-        $copy->checkout($due_date);
-        return $app['twig']->render('copy.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll(), 'copy'=>$copy, 'copies'=>$book->copies_list()));
+        $patron = Patron::find($_POST['get_patron']);
+        $copy->checkout($due_date, $patron);
+        return $app['twig']->render('copy.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll(), 'copy'=>$copy, 'all_patrons'=> Patron::getAll(), 'copies'=>$book->copies_list()));
     });
 
+//delete copy
 
+    $app->delete("/delete/{id}/{copy_id}", function($id, $copy_id) use ($app)
+    {
+        $book = Book::find($id);
+        $weeded_copy = Copy::find($copy_id);
+        $weeded_copy->delete();
+      return $app['twig']->render('book.html.twig', array('copy_number' => $copy, 'book_authors' => $book->authors(), 'book' => $book, 'all_authors'=> Author::getAll(), 'all_patrons'=> Patron::getAll(), 'copies'=>$book->copies_list()));
+    });
 ///PATRONS
     $app->get("/patron", function() use ($app){
-        return $app['twig']->render('patron.html.twig');
+        return $app['twig']->render('patron.html.twig', array('all_patrons'=>Patron::getAll()));
     });
-
+//add new Patron
+    $app->post("/add_patron", function() use ($app){
+        $new_patron = new Patron($_POST['patron_last'], $_POST['patron_first']);
+        $new_patron->save();
+      return $app['twig']->render('patron.html.twig', array('all_patrons'=>Patron::getAll()));
+    });
+//get Patron account page
+    $app->get("/patron_id/login", function() use ($app) {
+        $id = $_GET['get_patron'];
+        $patron = Patron::find($id);
+        return $app['twig']->render('patron_id.html.twig', array('patron' => $patron, 'copies' => $patron->getCheckouts()));
+    });
 
     return $app;
  ?>
