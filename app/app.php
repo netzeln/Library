@@ -119,7 +119,13 @@ $app->get("/book/{id}/{copy_id}", function($id, $copy_id) use ($app) {
         $copy->checkout($due_date, $patron);
         return $app['twig']->render('copy.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll(), 'copy'=>$copy, 'all_patrons'=> Patron::getAll(), 'copies'=>$book->copies_list()));
     });
-
+    $app->patch("/copy_checkin/{id}/{copy_id}", function($id, $copy_id) use ($app) {
+        $book = Book::find($id);
+        $copy = Copy::find($copy_id);
+        
+        $copy->checkin();
+        return $app['twig']->render('copy.html.twig', array('book_authors' => $book->authors(), 'book' => $book, "all_authors"=>Author::getAll(), 'copy'=>$copy, 'all_patrons'=> Patron::getAll(), 'copies'=>$book->copies_list()));
+    });
 //delete copy
 
     $app->delete("/delete/{id}/{copy_id}", function($id, $copy_id) use ($app)
